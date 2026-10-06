@@ -67,9 +67,9 @@ python scrobbler.py --no-browser --data-dir .test-data
 
 Tests use fake Last.fm responses and temporary storage; they do not submit real plays. CI runs on Windows and Ubuntu with Python 3.10 and 3.12. Browser rendering is checked separately from the shader lifecycle tests.
 
-Build the source release with `python tools/package_release.py`. The explicit file list excludes personal logs, local databases, credentials, and development tools. The ZIP and `SHA256SUMS.txt` appear in `dist/`.
+Build the source release with `python tools/package_release.py`. The explicit file list excludes personal logs, local databases, credentials, and development tools. The ZIP appears in `dist/`.
 
-[Architecture](docs/ARCHITECTURE.md) · [Contributing](CONTRIBUTING.md) · [Release process](PUBLISHING.md) · [Code of conduct](CODE_OF_CONDUCT.md)
+[Architecture](docs/ARCHITECTURE.md) · [Contributing](CONTRIBUTING.md) · [Code of conduct](CODE_OF_CONDUCT.md)
 
 ## License and identity
 

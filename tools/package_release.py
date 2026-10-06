@@ -1,6 +1,5 @@
 """Create a source ZIP from an explicit list, without personal data or dependencies."""
 from pathlib import Path
-import hashlib
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -11,7 +10,7 @@ FILES = [
     'web/index.html', 'web/app.js', 'web/liquid-glass.js', 'web/style.css',
     'web/logo-black.png', 'web/logo-white.png', 'docs/images/preview.png',
     'tests/test_scrobbler.py', 'tests/test_liquid_glass.cjs', 'tools/package_release.py', '.gitignore',
-    '.github/workflows/checks.yml', '.gitattributes', 'PUBLISHING.md',
+    '.github/workflows/checks.yml', '.gitattributes',
     '.github/ISSUE_TEMPLATE/bug_report.yml', '.github/ISSUE_TEMPLATE/feature_request.yml',
     '.github/ISSUE_TEMPLATE/config.yml', '.github/PULL_REQUEST_TEMPLATE.md',
     'docs/USER_GUIDE.md', 'docs/TROUBLESHOOTING.md', 'docs/ARCHITECTURE.md',
@@ -29,9 +28,6 @@ def main():
         for name in FILES:
             archive.write(ROOT / name, f'Akis-Rockbox-Scrobbler/{name}')
     print(f'Created {output.name} ({output.stat().st_size:,} bytes, {len(FILES)} files)')
-    checksum = hashlib.sha256(output.read_bytes()).hexdigest()
-    (destination / 'SHA256SUMS.txt').write_text(f'{checksum}  {output.name}\n', encoding='ascii')
-    print('Created SHA256SUMS.txt')
 
 
 if __name__ == '__main__':

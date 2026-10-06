@@ -24,7 +24,7 @@ flowchart LR
 | `web/style.css` | Aero layout, glass fallback, readable queue surfaces, keyboard focus and responsive layout. |
 | `tests/test_scrobbler.py` | Parser, Last.fm response matching, durable queue behavior, credentials and local HTTP guards. |
 | `tests/test_liquid_glass.cjs` | Off switch, cross-tab preference, hidden-page pause, reduced motion, context loss and graphics fallback. Real GLSL compilation needs browser verification. |
-| `tools/package_release.py` | Explicit source-release allowlist and SHA-256 checksum output. |
+| `tools/package_release.py` | Builds the source-release ZIP from an explicit file list. |
 
 ## Storage and identity
 
