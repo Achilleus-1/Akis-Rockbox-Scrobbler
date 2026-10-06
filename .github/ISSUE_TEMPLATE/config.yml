@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Troubleshooting and setup
+    url: https://github.com/Achilleus-1/Akis-Rockbox-Scrobbler/blob/main/docs/TROUBLESHOOTING.md
+    about: Check common import, connection and graphics issues first.
+  - name: Security policy
+    url: https://github.com/Achilleus-1/Akis-Rockbox-Scrobbler/blob/main/SECURITY.md
+    about: Use a private channel for sensitive vulnerability reports.

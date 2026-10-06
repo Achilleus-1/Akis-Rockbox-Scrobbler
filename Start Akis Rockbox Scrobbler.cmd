@@ -15,7 +15,7 @@ if %errorlevel% equ 0 (
 )
 if errorlevel 1 (
     echo.
-    echo Rockbox Relay could not start. See the message above for details.
+    echo Aki's Rockbox Scrobbler could not start. See the message above for details.
     pause
 )
 endlocal
