@@ -2,9 +2,9 @@
 
 **[Product of Achilleus](https://linktr.ee/achilleus_)** — Created and maintained by [Achilleus (Achilleus-1)](https://github.com/Achilleus-1).
 
-A lightweight local Windows app that brings your Rockbox listening history to Last.fm, with a glossy Frutiger Aero-inspired music desk. Import your `.scrobbler.log`, review the queue, connect Last.fm, and send the plays you choose. No third-party Python packages, installer, analytics, or hosted backend.
+A lightweight local Windows app that brings your Rockbox listening history to Last.fm, with a Frutiger Aero-inspired music desk and translucent liquid glass panels. Import your `.scrobbler.log`, review the queue, connect Last.fm, and send the plays you choose. No third-party Python packages, installer, analytics, or hosted backend.
 
-![Aki's Rockbox Scrobbler — music desk with sample preview](docs/images/preview.png)
+![Aki's Rockbox Scrobbler — liquid glass music desk](docs/images/preview.png)
 
 ## Installation
 

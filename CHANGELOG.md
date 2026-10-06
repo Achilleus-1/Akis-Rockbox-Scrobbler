@@ -8,3 +8,4 @@
 - Enforce a 14-day submission window, with optional date adjustment for older unsent plays.
 - Match Last.fm receipts by timestamp and hold unverifiable outcomes for manual review.
 - Add the Achilleus-branded Frutiger Aero interface and supplied Achilleus logos.
+- Refine the interface with liquid glass panels, pill controls, soft reflections, and reduced-transparency fallbacks.
