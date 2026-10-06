@@ -618,8 +618,9 @@ class Handler(BaseHTTPRequestHandler):
             state = self.server.app.state()
             state["csrf"] = self.server.csrf
             self.respond(200, state)
-        elif path in {"/", "/app.js", "/style.css", "/favicon.svg", "/logo-black.png", "/logo-white.png"}:
+        elif path in {"/", "/app.js", "/liquid-glass.js", "/style.css", "/favicon.svg", "/logo-black.png", "/logo-white.png"}:
             name, mime = {"/": ("index.html", "text/html; charset=utf-8"), "/app.js": ("app.js", "text/javascript; charset=utf-8"),
+                          "/liquid-glass.js": ("liquid-glass.js", "text/javascript; charset=utf-8"),
                           "/style.css": ("style.css", "text/css; charset=utf-8"), "/favicon.svg": ("logo-black.png", "image/png"),
                           "/logo-black.png": ("logo-black.png", "image/png"), "/logo-white.png": ("logo-white.png", "image/png")}[path]
             self.respond(200, (ROOT / "web" / name).read_bytes(), mime)

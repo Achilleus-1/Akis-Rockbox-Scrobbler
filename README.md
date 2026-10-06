@@ -2,9 +2,11 @@
 
 **[Product of Achilleus](https://linktr.ee/achilleus_)** — Created and maintained by [Achilleus (Achilleus-1)](https://github.com/Achilleus-1).
 
-A lightweight local Windows app that brings your Rockbox listening history to Last.fm, with a Frutiger Aero-inspired music desk and translucent liquid glass panels. Import your `.scrobbler.log`, review the queue, connect Last.fm, and send the plays you choose. No third-party Python packages, installer, analytics, or hosted backend.
+A lightweight local Windows app that brings your Rockbox listening history to Last.fm, with a Frutiger Aero-inspired music desk and interactive liquid glass. Import your `.scrobbler.log`, review the queue, connect Last.fm, and send the plays you choose. No third-party Python packages, installer, analytics, or hosted backend.
 
 ![Aki's Rockbox Scrobbler — liquid glass music desk](docs/images/preview.png)
+
+The local WebGL shader refracts a flowing Aero background through rounded glass lenses. Move your pointer for shifting reflections and click for ripples. Text and controls remain native, with more opaque queue and reading surfaces. Settings → Appearance → **Interactive liquid glass** turns the effect off. Only this appearance preference is saved in browser local storage; pointer positions are never saved or sent. Rendering is capped at 30 FPS and 1.4 million pixels, pauses while the page is hidden, and uses still frames with reduced motion. Unsupported graphics use the static glass theme automatically.
 
 ## Installation
 
@@ -55,6 +57,8 @@ The readable source can be reviewed; this is not a claim of an independent secur
 ```powershell
 python -m unittest discover -s tests -v
 node --check web/app.js
+node --check web/liquid-glass.js
+node --test tests/test_liquid_glass.cjs
 python scrobbler.py --no-browser --data-dir .test-data
 ```
 

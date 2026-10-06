@@ -7,9 +7,9 @@ VERSION = '1.0.0'
 FILES = [
     'scrobbler.py', 'Start Akis Rockbox Scrobbler.cmd', 'README.md', 'LICENSE',
     'CONTRIBUTING.md', 'SECURITY.md', 'CHANGELOG.md',
-    'web/index.html', 'web/app.js', 'web/style.css',
+    'web/index.html', 'web/app.js', 'web/liquid-glass.js', 'web/style.css',
     'web/logo-black.png', 'web/logo-white.png', 'docs/images/preview.png',
-    'tests/test_scrobbler.py', 'tools/package_release.py', '.gitignore',
+    'tests/test_scrobbler.py', 'tests/test_liquid_glass.cjs', 'tools/package_release.py', '.gitignore',
     '.github/workflows/checks.yml', '.gitattributes', 'PUBLISHING.md',
 ]
 

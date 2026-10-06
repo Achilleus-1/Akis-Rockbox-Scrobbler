@@ -498,7 +498,7 @@ class LocalServerTests(unittest.TestCase):
             self.assertEqual(reply.status, 200)
 
     def test_assets_and_no_arbitrary_files(self):
-        for path in ['/', '/app.js', '/style.css', '/favicon.svg', '/logo-black.png', '/logo-white.png']:
+        for path in ['/', '/app.js', '/liquid-glass.js', '/style.css', '/favicon.svg', '/logo-black.png', '/logo-white.png']:
             with self.request(path) as reply:
                 self.assertEqual(reply.status, 200)
                 self.assertIn("frame-ancestors 'none'", reply.headers['Content-Security-Policy'])

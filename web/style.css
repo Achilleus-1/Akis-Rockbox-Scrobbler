@@ -1817,6 +1817,68 @@ dialog label>input:not([type=checkbox]) {
   }
 }
 
+.liquid-glass-canvas {
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  display:block;
+  pointer-events:none;
+  z-index:-1;
+}
+
+.shader-glass::before {
+  display:none;
+}
+
+.shader-glass .main-shell {
+  background:#ffffff08;
+  backdrop-filter:none;
+  -webkit-backdrop-filter:none;
+}
+
+.shader-glass .sidebar,
+.shader-glass .topbar,
+.shader-glass .page-heading,
+.shader-glass .upload-card,
+.shader-glass .connection-card,
+.shader-glass .nav-item.active,
+.shader-glass .account-chip,
+.shader-glass .button:not(dialog .button):not(.queue-card .button) {
+  background:transparent;
+  backdrop-filter:none;
+  -webkit-backdrop-filter:none;
+}
+
+.shader-glass .queue-card,.shader-glass .reading-view article {
+  background:#f4faffe8;
+  backdrop-filter:none;
+  -webkit-backdrop-filter:none;
+}
+
+.appearance-settings {
+  border:1px solid #ffffffbf;
+  border-radius:18px;
+  padding:16px;
+  margin-bottom:16px;
+  background:#e8f5fcaa;
+}
+
+.appearance-settings h3 {
+  margin-top:0;
+}
+
+.appearance-settings p {
+  margin-bottom:0;
+  font-size:12px;
+}
+
+@media(prefers-reduced-transparency:reduce) {
+  .shader-glass .queue-card,.shader-glass .reading-view article {
+    background:#f4faff;
+  }
+}
+
 @media(prefers-reduced-motion:reduce) {
   *,*::before,*::after {
     scroll-behavior:auto!important;

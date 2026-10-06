@@ -7,6 +7,8 @@ Run these checks before opening a pull request:
 ```powershell
 python -m unittest discover -s tests -v
 node --check web/app.js
+node --check web/liquid-glass.js
+node --test tests/test_liquid_glass.cjs
 python tools/package_release.py
 ```
 
