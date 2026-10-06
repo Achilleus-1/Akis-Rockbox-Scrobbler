@@ -1,0 +1,17 @@
+__pycache__/
+.test-data/
+*.pyc
+*.sqlite3*
+*.dpapi
+launch.url
+instance.lock
+dist/
+.venv/
+.env
+.env.*
+*.log
+*.zip
+/preview.jpg
+/history-settings.png
+.DS_Store
+Thumbs.db
