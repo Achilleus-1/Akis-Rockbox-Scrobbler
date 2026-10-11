@@ -600,6 +600,10 @@ def smoke_test(report):
                 root.update()
                 assert app.preferences()["dark_mode"] == dark
             assert not app.job["running"]
+            if getattr(sys, "frozen", False):
+                for name in ("Python-LICENSE.txt", "TclTk-LICENSE.txt", "OpenSSL-LICENSE.txt", "libffi-LICENSE.txt",
+                             "zlib-LICENSE.txt", "bzip2-LICENSE.txt", "xz-LICENSE.txt", "libmpdec-LICENSE.txt", "RUNTIME-VERSIONS.json"):
+                    assert (Path(sys._MEIPASS) / "licenses" / name).is_file(), f"Missing bundled notice: {name}"
             report.parent.mkdir(parents=True, exist_ok=True)
             report.write_text(json.dumps({"ok": True, "version": VERSION, "native_gui": "Tk", "imported": len(ui.rows), "themes": ["dark", "light"], "frozen": bool(getattr(sys, "frozen", False))}), encoding="utf-8")
         finally:

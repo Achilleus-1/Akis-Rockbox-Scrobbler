@@ -12,13 +12,15 @@ FILES = [
     "Start Akis Rockbox Scrobbler.cmd", "README.md", "LICENSE", "THIRD-PARTY-NOTICES.txt",
     "CONTRIBUTING.md", "SECURITY.md", "CHANGELOG.md", "CODE_OF_CONDUCT.md",
     "assets/app.png", "assets/app.ico", "assets/branding/achilleus-black.png", "assets/branding/achilleus-white.png", "assets/branding/achilleus-white-small.png",
-    "licenses/TclTk-LICENSE.txt", "docs/images/preview.png", "docs/images/preview-dark.png",
+    "licenses/TclTk-LICENSE.txt", "licenses/OpenSSL-LICENSE.txt", "licenses/libffi-LICENSE.txt",
+    "licenses/zlib-LICENSE.txt", "licenses/bzip2-LICENSE.txt", "licenses/xz-LICENSE.txt", "licenses/libmpdec-LICENSE.txt",
+    "docs/images/preview.png", "docs/images/preview-dark.png",
     "tests/test_scrobbler.py", "tests/test_desktop.py", "tools/package_release.py", "tools/build_installer.py", "tools/render_preview.py",
     ".gitignore", ".gitattributes", ".github/workflows/checks.yml", ".github/workflows/release.yml",
     ".github/ISSUE_TEMPLATE/bug_report.yml", ".github/ISSUE_TEMPLATE/feature_request.yml",
     ".github/ISSUE_TEMPLATE/config.yml", ".github/PULL_REQUEST_TEMPLATE.md",
     "docs/USER_GUIDE.md", "docs/TROUBLESHOOTING.md", "docs/ARCHITECTURE.md", "docs/DISTRIBUTION.md",
-    "docs/PORTABLE.txt", "docs/releases/1.1.0.md", "installer/setup.iss",
+    "docs/PORTABLE.txt", "docs/releases/1.1.0.md", "docs/releases/1.1.1.md", "installer/setup.iss",
 ]
 
 

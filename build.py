@@ -1,9 +1,13 @@
 """Build the Windows portable app with a private Python/Tcl/Tk runtime."""
 import importlib.metadata
+import json
 from pathlib import Path
 import shutil
 import subprocess
 import sys
+import ssl
+import sqlite3
+import zlib
 import zipfile
 
 from version import VERSION
@@ -17,13 +21,21 @@ def main():
         raise SystemExit("Build Windows releases on Windows with x64 Python.")
     if sys.maxsize <= 2**32:
         raise SystemExit("Windows releases require x64 Python.")
+    if sys.version_info < (3, 12) or not ssl.OPENSSL_VERSION.startswith("OpenSSL 3."):
+        raise SystemExit("Windows release builds require Python 3.12+ with OpenSSL 3.")
     licenses = ROOT / "build" / "licenses"
     licenses.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(Path(sys.base_prefix) / "LICENSE.txt", licenses / "Python-LICENSE.txt")
     distribution = importlib.metadata.distribution("PyInstaller")
     copying = next(file for file in distribution.files if str(file).endswith("licenses/COPYING.txt"))
     shutil.copyfile(distribution.locate_file(copying), licenses / "PyInstaller-COPYING.txt")
-    shutil.copyfile(ROOT / "licenses" / "TclTk-LICENSE.txt", licenses / "TclTk-LICENSE.txt")
+    for path in sorted((ROOT / "licenses").glob("*.txt")):
+        shutil.copyfile(path, licenses / path.name)
+    (licenses / "RUNTIME-VERSIONS.json").write_text(json.dumps({
+        "python": sys.version, "openssl": ssl.OPENSSL_VERSION,
+        "sqlite": sqlite3.sqlite_version, "zlib": zlib.ZLIB_RUNTIME_VERSION,
+        "pyinstaller": distribution.version,
+    }, indent=2), encoding="utf-8")
     for name in ("LICENSE", "THIRD-PARTY-NOTICES.txt"):
         shutil.copyfile(ROOT / name, licenses / name)
     numeric_version = tuple(int(part) for part in VERSION.split(".")) + (0,)

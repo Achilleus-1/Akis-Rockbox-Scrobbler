@@ -15,11 +15,11 @@ Setup uses `PrivilegesRequired=lowest`, installs under `%LOCALAPPDATA%\Programs\
 
 ## Build
 
-Use x64 Python on Windows. Install the pinned `requirements-build.txt` into a virtual environment. Run `build.py`, `tools/package_release.py`, then `tools/build_installer.py` with Inno Setup 6 installed. Output is in `dist/`. Build on the target operating system as required by PyInstaller.
+Use x64 Python 3.12+ with OpenSSL 3 on Windows. Install the pinned `requirements-build.txt` into a virtual environment. Run `build.py`, `tools/package_release.py`, then `tools/build_installer.py` with Inno Setup 6 installed. Output is in `dist/`. Build on the target operating system as required by PyInstaller.
 
 Python/Tcl/Tk are collected from the builder's Python installation. The release includes that runtime's Python license, Tcl/Tk's permissive license and PyInstaller's bootloader exception. Original source remains MIT. No Qt or FFmpeg binaries are included. [Third-party notices](../THIRD-PARTY-NOTICES.txt).
 
-The GitHub release workflow checks Python 3.10/3.12 on Windows/Linux, builds on Windows with Python 3.12 and PyInstaller 6.22.3, compiles Setup with Inno Setup 6.7.3, runs offline GUI/import/theme smoke checks on both portable and installed apps with system Python removed from PATH, checks shortcuts/uninstall and user-data preservation, then publishes assets on a matching `v1.1.0` tag. Manual workflow runs produce artifacts without publishing a Release.
+The GitHub release workflow checks Python 3.10/3.12 on Windows/Linux, builds on Windows with Python 3.12 and PyInstaller 6.22.3, compiles Setup with Inno Setup 6.7.3, runs offline GUI/import/theme smoke checks on both portable and installed apps with system Python removed from PATH, checks shortcuts/uninstall and user-data preservation, then publishes assets on a matching `v1.1.1` tag. Manual workflow runs produce artifacts without publishing a Release.
 
 ## Repository hygiene
 

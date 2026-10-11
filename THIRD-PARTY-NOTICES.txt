@@ -21,5 +21,34 @@ https://pyinstaller.org/en/stable/license.html
 The installer uses Inno Setup. Its engine is independently licensed:
 https://jrsoftware.org/files/is/license.txt
 
+Python's compiled runtime also includes:
+
+OpenSSL 3 (HTTPS): Apache-2.0. Copyright The OpenSSL Project Authors.
+https://www.openssl.org/ - see licenses/OpenSSL-LICENSE.txt.
+
+libffi (ctypes): MIT. Copyright Anthony Green, Red Hat, Inc. and others.
+https://github.com/libffi/libffi - see licenses/libffi-LICENSE.txt.
+
+zlib: zlib license. Copyright Jean-loup Gailly and Mark Adler.
+https://zlib.net/ - see licenses/zlib-LICENSE.txt.
+
+bzip2/libbzip2: bzip2 license. Copyright Julian R Seward.
+https://sourceware.org/bzip2/ - see licenses/bzip2-LICENSE.txt.
+
+liblzma from XZ Utils: public domain (library code).
+https://tukaani.org/xz/ - see licenses/xz-LICENSE.txt.
+
+libmpdec (decimal): BSD-2-Clause. Copyright Stefan Krah.
+https://www.bytereef.org/mpdecimal/ - see licenses/libmpdec-LICENSE.txt.
+
+SQLite: public domain. https://www.sqlite.org/copyright.html
+
+Microsoft Visual C++ runtime files are collected from the Python Windows
+installation as runtime redistributables; they retain Microsoft's terms.
+https://visualstudio.microsoft.com/license-terms/
+
+RUNTIME-VERSIONS.json in the compiled release's licenses folder records the
+builder's Python, OpenSSL, SQLite, zlib and PyInstaller versions.
+
 FFmpeg is not used or distributed by this project.
 Rockbox and Last.fm are independent projects/services, not bundled dependencies.

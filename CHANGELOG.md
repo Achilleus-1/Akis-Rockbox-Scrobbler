@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.1 — 2026-10-10
+
+- Added notices for the libraries bundled by Python, plus runtime version metadata.
+- Added checks for required license files in the compiled-app smoke test.
+- Required Python 3.12+ with OpenSSL 3 for release builds; source still supports Python 3.10+.
+
 ## 1.1.0 | 2026-10-10
 
 - Converted to a standalone native desktop window; removed HTML/JavaScript and the local HTTP server.

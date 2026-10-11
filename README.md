@@ -20,9 +20,9 @@ Windows 10/11 x64 is supported. Open [Releases](https://github.com/Achilleus-1/A
 
 | Download | Use it for |
 | --- | --- |
-| `Akis-Rockbox-Scrobbler-1.1.0-windows-x64-setup.exe` | Normal installation, Start menu shortcut, optional desktop shortcut, and Windows uninstall support. |
-| `Akis-Rockbox-Scrobbler-1.1.0-windows-x64-portable.zip` | Extract the entire ZIP and run `Akis-Rockbox-Scrobbler.exe`. Keep its supporting files together. |
-| `Akis-Rockbox-Scrobbler-1.1.0-source.zip` | Source code for developers; requires Python. |
+| `Akis-Rockbox-Scrobbler-1.1.1-windows-x64-setup.exe` | Normal installation, Start menu shortcut, optional desktop shortcut, and Windows uninstall support. |
+| `Akis-Rockbox-Scrobbler-1.1.1-windows-x64-portable.zip` | Extract the entire ZIP and run `Akis-Rockbox-Scrobbler.exe`. Keep its supporting files together. |
+| `Akis-Rockbox-Scrobbler-1.1.1-source.zip` | Source code for developers; requires Python. |
 | `SHA256SUMS.txt` | Checksums for the release downloads. |
 
 Setup installs for your Windows user under `%LOCALAPPDATA%\Programs\Akis-Rockbox-Scrobbler`. It includes a private Python and Tcl/Tk runtime, works offline during installation, and needs no administrator account. You do not need to install Python or FFmpeg. FFmpeg is not used by a log scrobbler.
