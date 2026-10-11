@@ -1,0 +1,25 @@
+Aki's Rockbox Scrobbler
+
+Original application source: MIT (see LICENSE).
+
+Windows releases include a private Python runtime, Tcl/Tk, and PyInstaller's
+bootloader. Their license texts are included in the release's licenses folder.
+
+Python: Python Software Foundation License and bundled notices
+https://www.python.org/
+https://docs.python.org/3/license.html
+
+Tcl/Tk: permissive Tcl/Tk license
+https://www.tcl-lang.org/
+See licenses/TclTk-LICENSE.txt.
+
+PyInstaller: GPL-2.0-or-later WITH Bootloader-exception
+The exception permits distribution of generated applications under their own
+license. See licenses/PyInstaller-COPYING.txt in the compiled release.
+https://pyinstaller.org/en/stable/license.html
+
+The installer uses Inno Setup. Its engine is independently licensed:
+https://jrsoftware.org/files/is/license.txt
+
+FFmpeg is not used or distributed by this project.
+Rockbox and Last.fm are independent projects/services, not bundled dependencies.

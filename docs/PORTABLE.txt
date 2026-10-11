@@ -1,0 +1,16 @@
+Aki's Rockbox Scrobbler — Windows portable edition
+
+Extract the ENTIRE ZIP, then double-click Akis-Rockbox-Scrobbler.exe.
+Keep _internal and the other files beside the EXE. No system Python, browser
+interface, FFmpeg, or administrator account is needed.
+
+The browser opens only for Last.fm authorization and external links.
+In Settings, enter your own Last.fm API key and shared secret. Connect Last.fm,
+approve access, return to the app, and click Finish connecting.
+
+Queue, receipts, and theme settings live under %LOCALAPPDATA%\RockboxRelay.
+Portable means no installation; user data stays separate from the app folder.
+Replacing the app folder preserves your queue and duplicate protection.
+
+Documentation: https://github.com/Achilleus-1/Akis-Rockbox-Scrobbler
+Dependency license texts are in licenses/.

@@ -6,6 +6,10 @@ __pycache__/
 launch.url
 instance.lock
 dist/
+build/
+*.spec
+*.exe
+.test-output/
 .venv/
 .env
 .env.*

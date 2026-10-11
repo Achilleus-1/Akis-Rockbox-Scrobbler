@@ -1,57 +1,35 @@
 # Architecture
 
-[Back to the project](../README.md)
+The interface is native Tk/ttk. There is no HTML, JavaScript, WebView or HTTP listener. The previous browser renderer and local server have been removed.
 
-The app is a Python standard-library server with a local browser interface. It has no remote application backend, build step, Python dependencies, or JavaScript runtime dependencies.
-
-```mermaid
-flowchart LR
-    Player[Rockbox export] -->|user chooses log| UI[Local browser UI]
-    UI <-->|authenticated loopback API| Server[Python server]
-    Server <--> DB[(Local SQLite)]
-    Server <-->|signed HTTPS requests| Lastfm[Last.fm API]
-    UI -->|account authorization| Auth[Last.fm website]
-```
-
-## Source map
-
-| Path | Responsibility |
+| Component | Responsibility |
 | --- | --- |
-| `scrobbler.py` | Parsing, fingerprints, queue storage, date planning, signed Last.fm requests, authentication and local HTTP server. |
-| `web/index.html` | Semantic UI, accessible dialogs, local SVG icons and Achilleus identity. |
-| `web/app.js` | Review, filters, selection, import, authorization and submission flows. Imported values are rendered as text. |
-| `web/liquid-glass.js` | Two WebGL passes: procedural environment texture and rounded refracting glass lenses aligned to DOM geometry. Pointer lighting and up to four fading ripples; no DOM or desktop capture. |
-| `web/style.css` | Aero layout, glass fallback, readable queue surfaces, keyboard focus and responsive layout. |
-| `tests/test_scrobbler.py` | Parser, Last.fm response matching, durable queue behavior, credentials and local HTTP guards. |
-| `tests/test_liquid_glass.cjs` | Off switch, cross-tab preference, hidden-page pause, reduced motion, context loss and graphics fallback. Real GLSL compilation needs browser verification. |
-| `tools/package_release.py` | Builds the source-release ZIP from an explicit file list. |
+| `app.py` | Desktop entry point. |
+| `desktop.py` | Native window, themes, selection, dialogs, confirmation and worker-result handling. |
+| `scrobbler.py` | Parser, SQLite queue, Last.fm protocol, Windows DPAPI and instance lock. |
+| `version.py` | Shared application identity and release version. |
+| `assets/` | App icon and Achilleus branding. |
+| `tests/` | Backend tests and actual native UI integration tests using fake Last.fm replies. |
+| `build.py` | PyInstaller one-folder build and portable ZIP with runtime/licenses. |
+| `installer/setup.iss` | Per-user Windows installation, shortcuts and uninstall. |
+| `tools/` | Installer compiler wrapper and explicit source archive manifest. |
 
-## Storage and identity
+## Threads
 
-SQLite uses WAL journaling and full synchronization. The `tracks` table holds original imported metadata and source filenames. `outcomes` holds account-specific receipts and submitted timestamps. `preferences` stores history preferences; `remaps` stores planned adjusted submission dates.
+Tk widgets are accessed only from the main thread. Import and account operations run on a background worker and return through a thread-safe queue. Submission has its own backend worker. Polling avoids acquiring backend state while a network operation holds its lock, so authentication cannot freeze the window. Closing is held during active work.
 
-Play fingerprints derive from artist, title and original timestamp. Album changes do not create another play. Date planning does not change the fingerprint. Accepted receipts survive clearing the imported queue and are scoped to the Last.fm account.
+The backend's `/api/...` dispatch identifiers remain internal operation names for compatibility with existing backend tests. They are direct Python calls and are never exposed over HTTP.
 
-Remembered account credentials are stored separately with Windows DPAPI. Credentials otherwise remain in memory. The browser stores only its glass appearance preference in local storage. The existing `RockboxRelay` data-directory name is retained for continuity with earlier local versions.
+## Storage
+
+SQLite uses WAL journaling and full synchronization. `tracks` holds original metadata and filenames; `outcomes` stores account-specific receipts and actual submitted timestamps; `remaps` stores planned adjusted dates; `preferences` stores history settings and `dark_mode`.
+
+Fingerprints use normalized artist/title and original listening timestamps. Remapping does not change identity. Receipts survive clearing the queue. Windows DPAPI credentials are separate from SQLite. The original `RockboxRelay` storage path and schema are retained for upgrades.
 
 ## Submission lifecycle
 
-1. The UI submits an explicit reviewed selection and destination account. Adjusted timestamps must still match the reviewed plan.
-2. The app holds the queue during the job, records `sending` before network I/O, and submits oldest first in batches of at most 50.
-3. Last.fm receipts are matched by timestamp. Shared timestamps with different outcomes require unique metadata matching. The entire response is validated before acceptance is recorded.
-4. Verified code-zero receipts become `accepted`; individual rejections become `ignored`. Unverifiable responses become `uncertain` and require the user's profile check.
-5. On restart, leftover `sending` records become `uncertain`. No uncertain or accepted play is automatically retried.
+The UI confirms the selected account and timestamps. Backend validation rejects an outdated account/date plan. Plays are submitted oldest first in batches of 50; `sending` is persisted before network I/O. Receipts are matched to timestamps, with metadata matching for ambiguous shared times. Entire responses are validated before assigning outcomes.
 
-This is duplicate protection within this app, not a comparison against all remote Last.fm listening history.
+Verified acceptance becomes `accepted`, service rejection becomes `ignored`, and unverifiable/interrupted outcomes become `uncertain`. Remaining `sending` records become `uncertain` after restart. They require a manual profile check before retrying.
 
-## Local server boundary
-
-The server binds to loopback. A random launch URL establishes a per-port HttpOnly SameSite cookie. API writes require the session cookie, exact Host and Origin, JSON content type, and the current CSRF token. Static routes use a fixed allowlist. CSP permits local assets and prevents framing.
-
-Last.fm requests use verified HTTPS, no redirects, and a timeout. MD5 is used only for the signature required by Last.fm's protocol. Queue rows are never automatically submitted merely because they were imported.
-
-## Rendering and compatibility
-
-The shader renders behind the DOM, with no pointer hit testing of its own. Each visible lens refracts the generated environment texture using rounded-edge normals, slight color dispersion, pointer light and fading wave offsets. It does not refract actual DOM text or read other applications.
-
-Rendering is capped at 30 FPS and approximately 1.4 million pixels. Hidden pages stop scheduling frames. Reduced motion draws on demand without background flow or click waves. Graphics failure restores the CSS theme; the appearance switch also works without changing the queue or account state.
+Last.fm uses verified HTTPS, timeouts and no redirects. MD5 is used only for Last.fm's required API signature. Native source operation uses Python's standard library; releases bundle Python and Tcl/Tk. FFmpeg is unnecessary.

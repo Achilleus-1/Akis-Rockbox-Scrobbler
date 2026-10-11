@@ -1,23 +1,19 @@
-"""Aki's Rockbox Scrobbler: a local, dependency-free Rockbox -> Last.fm scrobbler."""
+"""Rockbox log parsing, local storage, and Last.fm operations for the desktop app."""
 from __future__ import annotations
 
-import argparse
 import ctypes
 from ctypes import wintypes
 import hashlib
-from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
 import os
 from pathlib import Path
 import re
-import secrets
 import sqlite3
 import threading
 import time
 import urllib.error
 import urllib.parse
 import urllib.request
-import webbrowser
 
 ROOT = Path(__file__).resolve().parent
 MAX_UPLOAD = 8 * 1024 * 1024
@@ -56,7 +52,7 @@ class Lastfm:
         params["api_sig"] = signature(params, self.credentials["secret"])
         params["format"] = "json"
         request = urllib.request.Request(API_URL, urllib.parse.urlencode(params).encode("utf-8"),
-                                         headers={"User-Agent": "AkisRockboxScrobbler/1.0", "Content-Type": "application/x-www-form-urlencoded"})
+                                         headers={"User-Agent": "AkisRockboxScrobbler/1.1", "Content-Type": "application/x-www-form-urlencoded"})
         try:
             with urllib.request.build_opener(NoRedirect).open(request, timeout=30) as response:
                 raw = response.read(2 * 1024 * 1024 + 1)
@@ -287,7 +283,9 @@ class App:
 
     def preferences(self):
         saved = self.db.execute("SELECT value FROM preferences WHERE name='remap_outdated'").fetchone()
-        return {"remap_outdated": bool(saved and saved[0] == "true")}
+        theme = self.db.execute("SELECT value FROM preferences WHERE name='dark_mode'").fetchone()
+        return {"remap_outdated": bool(saved and saved[0] == "true"),
+                "dark_mode": bool(theme and theme[0] == "true")}
 
     def update_remaps(self, force=False):
         """Plan dates once, retaining source fingerprints and all submitted/uncertain receipts."""
@@ -388,6 +386,13 @@ class App:
                 self.update_remaps()
                 outdated = sum(row["status"] == "expired" for row in self.state()["tracks"])
                 return {"added": added, "duplicates": len(rows) - added, "excluded": len(issues), "issues": issues[:300], "outdated": outdated}
+            if route == "/api/appearance":
+                value = data.get("dark_mode")
+                if not isinstance(value, bool):
+                    raise AppError("Choose a light or dark appearance.")
+                with self.db:
+                    self.db.execute("INSERT OR REPLACE INTO preferences VALUES('dark_mode',?)", ("true" if value else "false",))
+                return {"ok": True}
             if route == "/api/preferences":
                 self.require_idle()
                 return {"ok": True, "adjusted": self.set_preferences(data)}
@@ -561,96 +566,6 @@ class App:
                 self.job["running"] = False
 
 
-class Server(ThreadingHTTPServer):
-    daemon_threads = True
-
-    def __init__(self, app, port=0):
-        super().__init__(("127.0.0.1", port), Handler)
-        self.app = app
-        self.launch_token = secrets.token_urlsafe(32)
-        self.session_token = secrets.token_urlsafe(32)
-        self.csrf = secrets.token_urlsafe(32)
-        self.origin = f"http://127.0.0.1:{self.server_port}"
-        self.cookie_name = f"relay_session_{self.server_port}"
-
-
-class Handler(BaseHTTPRequestHandler):
-    def log_message(self, *_):
-        pass  # Avoid logging local session tokens and metadata.
-
-    def respond(self, status, body, content_type="application/json", headers=None):
-        raw = body if isinstance(body, bytes) else json.dumps(body).encode("utf-8")
-        self.send_response(status)
-        self.send_header("Content-Type", content_type)
-        self.send_header("Content-Length", str(len(raw)))
-        self.send_header("Cache-Control", "no-store")
-        self.send_header("X-Content-Type-Options", "nosniff")
-        self.send_header("Referrer-Policy", "no-referrer")
-        self.send_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'")
-        for key, value in (headers or {}).items():
-            self.send_header(key, value)
-        self.end_headers()
-        try:
-            self.wfile.write(raw)
-        except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError):
-            pass
-
-    def allowed_host(self):
-        return self.headers.get("Host") == urllib.parse.urlsplit(self.server.origin).netloc
-
-    def authorized(self):
-        cookies = self.headers.get("Cookie", "").split(";")
-        expected = self.server.cookie_name + "=" + self.server.session_token
-        return any(secrets.compare_digest(cookie.strip(), expected) for cookie in cookies)
-
-    def do_GET(self):
-        if not self.allowed_host():
-            self.respond(403, {"error": "Invalid local host."})
-            return
-        path = urllib.parse.urlsplit(self.path).path
-        if secrets.compare_digest(path, "/launch/" + self.server.launch_token):
-            self.respond(303, b"", headers={"Location": "/", "Set-Cookie": f"{self.server.cookie_name}={self.server.session_token}; HttpOnly; SameSite=Strict; Path=/"})
-            return
-        if not self.authorized():
-            self.respond(403, {"error": "Open the app using Start Akis Rockbox Scrobbler.cmd to unlock this local session."})
-            return
-        if path == "/api/state":
-            state = self.server.app.state()
-            state["csrf"] = self.server.csrf
-            self.respond(200, state)
-        elif path in {"/", "/app.js", "/liquid-glass.js", "/style.css", "/favicon.svg", "/logo-black.png", "/logo-white.png"}:
-            name, mime = {"/": ("index.html", "text/html; charset=utf-8"), "/app.js": ("app.js", "text/javascript; charset=utf-8"),
-                          "/liquid-glass.js": ("liquid-glass.js", "text/javascript; charset=utf-8"),
-                          "/style.css": ("style.css", "text/css; charset=utf-8"), "/favicon.svg": ("logo-black.png", "image/png"),
-                          "/logo-black.png": ("logo-black.png", "image/png"), "/logo-white.png": ("logo-white.png", "image/png")}[path]
-            self.respond(200, (ROOT / "web" / name).read_bytes(), mime)
-        else:
-            self.respond(404, {"error": "Not found."})
-
-    def do_POST(self):
-        if not self.allowed_host() or not self.authorized() or self.headers.get("Origin") != self.server.origin or not secrets.compare_digest(self.headers.get("X-CSRF", ""), self.server.csrf):
-            self.respond(403, {"error": "Local session check failed. Reopen the app from its launcher."})
-            return
-        if self.headers.get("Content-Type") != "application/json":
-            self.respond(415, {"error": "Expected JSON."})
-            return
-        try:
-            length = int(self.headers.get("Content-Length", "0"))
-            if not 0 < length <= MAX_UPLOAD * 2:
-                self.respond(413, {"error": "File is too large (8 MB maximum)."})
-                return
-            self.connection.settimeout(15)
-            data = json.loads(self.rfile.read(length))
-            if not isinstance(data, dict):
-                raise ValueError
-            result = self.server.app.dispatch(urllib.parse.urlsplit(self.path).path, data)
-            self.respond(200, result)
-        except (AppError, ValueError, TypeError) as exc:
-            self.respond(400, {"error": str(exc) if isinstance(exc, AppError) else "Invalid request."})
-        except Exception:
-            self.respond(500, {"error": "The local action could not be completed. Check available disk space and try again."})
-
-
 def acquire_instance_lock(directory):
     handle = open(directory / "instance.lock", "a+b")
     if handle.tell() == 0:
@@ -670,41 +585,7 @@ def acquire_instance_lock(directory):
     return handle
 
 
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--no-browser", action="store_true")
-    parser.add_argument("--port", type=int, default=0)
-    parser.add_argument("--data-dir", type=Path, default=Path(os.environ.get("LOCALAPPDATA", str(Path.home() / ".local/share"))) / "RockboxRelay")
-    args = parser.parse_args()
-    args.data_dir.mkdir(parents=True, exist_ok=True)
-    instance = acquire_instance_lock(args.data_dir)
-    launch_file = args.data_dir / "launch.url"
-    if instance is None:
-        if launch_file.exists() and not args.no_browser:
-            url = launch_file.read_text().strip()
-            if re.fullmatch(r"http://127\.0\.0\.1:\d+/launch/[A-Za-z0-9_-]+", url):
-                webbrowser.open(url)
-        print("Aki's Rockbox Scrobbler is already running. Use its browser tab or close its existing terminal first.")
-        return
-    app = App(args.data_dir)
-    server = Server(app, args.port)
-    url = server.origin + "/launch/" + server.launch_token
-    launch_file.write_text(url)
-    print(f"Aki's Rockbox Scrobbler is running at {server.origin}")
-    print("Keep this window open. Press Ctrl+C here to stop the app.")
-    if args.no_browser:
-        print("Launch URL:", url)
-    else:
-        webbrowser.open(url)
-    try:
-        server.serve_forever()
-    except KeyboardInterrupt:
-        print("\nStopping Aki's Rockbox Scrobbler…")
-    finally:
-        server.server_close()
-        launch_file.unlink(missing_ok=True)
-        instance.close()
-
 
 if __name__ == "__main__":
+    from desktop import main
     main()

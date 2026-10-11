@@ -11,7 +11,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
-from scrobbler import App, AppError, Lastfm, LastfmError, Server, acquire_instance_lock, parse_log, protect, signature
+from scrobbler import App, AppError, Lastfm, LastfmError, acquire_instance_lock, parse_log, protect, signature
 
 
 NOW = 1791216000
@@ -461,64 +461,6 @@ class AppTests(unittest.TestCase):
         self.assertEqual(retried['status'], 'pending')
         self.assertTrue(retried['date_adjusted'])
 
-
-class LocalServerTests(unittest.TestCase):
-    def setUp(self):
-        self.temp = tempfile.TemporaryDirectory()
-        self.app = App(self.temp.name)
-        self.server = Server(self.app)
-        self.thread = threading.Thread(target=self.server.serve_forever, daemon=True)
-        self.thread.start()
-        self.origin = self.server.origin
-        self.cookie = self.server.cookie_name + '=' + self.server.session_token
-
-    def tearDown(self):
-        self.server.shutdown()
-        self.server.server_close()
-        self.thread.join()
-        self.app.db.close()
-        self.temp.cleanup()
-
-    def request(self, path, data=None, headers=None):
-        base = {'Cookie':self.cookie}
-        if data is not None:
-            base.update({'Origin':self.origin,'X-CSRF':self.server.csrf,'Content-Type':'application/json'})
-        base.update(headers or {})
-        request = urllib.request.Request(self.origin + path, data=None if data is None else json.dumps(data).encode(), headers=base)
-        try:
-            return urllib.request.urlopen(request, timeout=5)
-        except urllib.error.HTTPError as error:
-            return error
-
-    def test_auth_origin_csrf_and_host_guards(self):
-        for headers in ({'Cookie':''}, {'Origin':'https://evil.example'}, {'X-CSRF':'wrong'}, {'Host':'evil.example'}):
-            with self.request('/api/clear', {}, headers) as reply:
-                self.assertEqual(reply.status, 403)
-        with self.request('/api/clear', {}) as reply:
-            self.assertEqual(reply.status, 200)
-
-    def test_assets_and_no_arbitrary_files(self):
-        for path in ['/', '/app.js', '/liquid-glass.js', '/style.css', '/favicon.svg', '/logo-black.png', '/logo-white.png']:
-            with self.request(path) as reply:
-                self.assertEqual(reply.status, 200)
-                self.assertIn("frame-ancestors 'none'", reply.headers['Content-Security-Policy'])
-                if path.endswith('.png'):
-                    self.assertEqual(reply.headers['Content-Type'], 'image/png')
-                    self.assertTrue(reply.read().startswith(b'\x89PNG\r\n\x1a\n'))
-        for path in ['/scrobbler.py', '/../../README.md', '/credentials.dpapi']:
-            with self.request(path) as reply:
-                self.assertEqual(reply.status, 404)
-
-    def test_malformed_request_and_local_import(self):
-        with self.request('/api/import', {'content':log(timestamp=int(time.time()) - 1000), 'filename':'test.log'}) as reply:
-            self.assertEqual(reply.status, 200)
-            self.assertEqual(json.load(reply)['added'], 1)
-        with self.request('/api/state') as reply:
-            state = json.load(reply)
-            self.assertEqual(len(state['tracks']), 1)
-            self.assertNotIn('credentials', state)
-        with self.request('/api/clear', [], {}) as reply:
-            self.assertEqual(reply.status, 400)
 
 
 if __name__ == '__main__':

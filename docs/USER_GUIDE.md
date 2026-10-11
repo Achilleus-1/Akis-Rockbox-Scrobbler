@@ -4,51 +4,49 @@
 
 ## Installation
 
-Download the source ZIP, extract it to a folder, and follow the steps below. Python 3.10 or newer and a modern browser are required. This is a local Python application; the ZIP is not a standalone executable.
+Download the Windows Setup EXE from [Releases](https://github.com/Achilleus-1/Akis-Rockbox-Scrobbler/releases/latest), run it, and launch the app from its Start menu shortcut. Setup needs no administrator account or downloads during installation. Uninstall through Windows Installed apps.
 
-## Start
+For the portable edition, extract the whole ZIP and double-click `Akis-Rockbox-Scrobbler.exe`. Keep `_internal` and the supporting files together. Both editions include Python and Tcl/Tk. No system Python, FFmpeg, terminal, or browser interface is required.
 
-1. Install **Python 3.10 or newer** from [python.org](https://www.python.org/downloads/) if needed. On Windows, enable “Add Python to PATH”.
-2. Double-click **Start Akis Rockbox Scrobbler.cmd**. The interface opens in your default browser. Keep the terminal open; close it or press Ctrl+C to stop the app. Running the launcher again opens the existing instance.
-3. Open **Settings**. [Create a Last.fm API account](https://www.last.fm/api/account/create), name it “Aki's Rockbox Scrobbler”, and leave optional callback/website fields blank. Paste the API key and shared secret. This step requires your Last.fm account; the app does not come with registered developer credentials.
-4. Click **Connect Last.fm**, open the authorization link, and approve access on Last.fm. Return to the app and click **I've authorized access**. Never put your Last.fm password in the app.
-5. Connect your player over USB and import `.scrobbler.log` from the root of its drive (or a copy on your PC). Review the dates, select plays, and click **Scrobble selected**. Confirm the destination account before sending.
+## Connect and import
 
-On current Rockbox builds, enable playback logging, then run **Plugins → Applications → lastfm_scrobbler** to export `.scrobbler.log` first. The export only records an L/S flag, not elapsed play time. This app treats all entries as at least 50% listened, including entries marked S. Raw `playback.log` is not accepted: it contains paths and requires the player to export song metadata. Export before disconnecting the device.
+1. Open **Settings**. [Create a Last.fm API account](https://www.last.fm/api/account/create), name it Aki's Rockbox Scrobbler, and leave optional callback/website fields blank. Save the API key and shared secret. These are app credentials, not your Last.fm password.
+2. Click **Connect Last.fm**, approve access in the browser, return to the desktop app, and click **Finish connecting**.
+3. In Rockbox, enable playback logging and run **Plugins > Applications > lastfm_scrobbler** to export `.scrobbler.log`. Raw `playback.log` contains paths rather than the required song metadata.
+4. Import `.scrobbler.log` from your connected player or a copy on your PC. Leave time correction at zero unless the player clock needs adjustment. Review the import report for excluded lines and reasons.
+5. Search/filter the queue and select plays by clicking their checkboxes or pressing Space on a highlighted row. **Select ready** selects eligible visible plays; **Deselect all** clears all selections, including hidden ones.
+6. Click **Scrobble selected**. Confirm the account, count and date range before anything is sent.
+
+Click **Dark mode** in the sidebar or Settings to change themes. The setting survives restarting the app. Close the window to quit; wait for any active operation to finish first.
 
 ## Behavior
 
-- Supports UTF-8/BOM, LF/CRLF, comments, 7-field logs and 8-field logs with optional MusicBrainz IDs. Up to 8 MB per file and 20,000 eligible plays per import.
-- Preview shows the actual account, artist, title, album and local listening time. Selection starts empty. Sample mode is an unsaved preview with submission disabled.
-- All parseable entries are treated as at least 50% listened, including skipped entries and short songs. The original Rockbox flag is retained as metadata; the app does not measure elapsed listening time. Last.fm's API records a play, not a listening percentage.
-- A two-week submission cutoff applies by default. Older plays are kept locally with a **Too old** status, and cannot be selected for submission.
-- In **Settings**, optionally enable **Adjust outdated listening dates**, then click **Save history settings**. Older unsent plays are spread in chronological order across at most the last 13 days, ending one minute before adjustment. This applies to existing queued plays and subsequent imports. Adjusted dates are planned and saved, not silently moved on each page refresh. If a planned date ages out, save the setting again to refresh the plan.
-- Original listening dates remain saved locally, while the queue displays the submission date and the original date beneath adjusted entries. The confirmation states how many selected dates were adjusted. Last.fm will count accepted plays on those newer dates; their original historical dates cannot be restored on Last.fm through this import.
-- Source fingerprints, rather than adjusted dates, identify plays for duplicate protection. Reimporting an old log does not create fresh copies. Accepted and uncertain plays are never automatically retried or retimed. Plays specifically rejected for being too old can be retried after adjusting dates; other Last.fm rejections stay visible.
-- Entries with missing artist/title metadata, non-positive durations, missing timestamps, future times, malformed fields, or exact duplicates still receive an exclusion reason.
-- Apart from the optional date adjustment above, original timestamps are preserved. An explicit optional clock correction in 15-minute increments handles incorrectly configured player clocks. Treat exported Unix timestamps as UTC. If a UTC−5 local player clock was encoded as UTC, subtract 5 hours. Use the offset in effect when you listened, including daylight saving changes. Entries without valid timestamps are still excluded.
-- Submits oldest first, at most 50 per request, with a one-second pause between batches. Every row's Last.fm ignored code is inspected. “Accepted” means Last.fm reported code 0; profile updates may lag.
-- Response receipts are matched by their listening timestamps, so reordered batch results are handled correctly. Plays with a shared timestamp and different outcomes require a unique metadata match. Missing, conflicting, or ambiguous receipts hold the whole batch as **Uncertain** with a specific explanation; check your profile before choosing a retry.
-- Local receipts deduplicate artist + title + timestamp per Last.fm account. Repeated songs at different times are preserved. This does not check listens uploaded by other apps; avoid importing logs already submitted elsewhere.
-- Queue and receipts survive restarts. Confirmed accepted and ignored plays are held back. A request with an unknown outcome is held as **Uncertain**. Check your Last.fm library, then use **Check outcome** to mark it received or enable a manual retry. No automatic resend of ambiguous requests.
-- A reported API rejection leaves the batch pending; fix the error before selecting and submitting again. Invalid sessions require reconnecting. Ignored plays retain Last.fm's reason; they are not automatically retried.
-- Source logs and music files are never modified or deleted. Clearing the queue retains deduplication fingerprints. Reimporting a file shows previously accepted outcomes for the same account.
+- UTF-8/BOM, LF/CRLF, comments, 7-field logs and 8-field logs with optional MusicBrainz IDs are supported. Limits: 8 MB per file, 100,000 lines and 20,000 plays in the queue.
+- Importing starts with no new selections and never submits automatically. Source files are never changed.
+- All otherwise valid entries are treated as at least 50% listened, including skipped entries and short songs. The original flag is retained; the app cannot measure actual elapsed listening time.
+- A 14-day submission cutoff applies by default. Older entries remain **Too old**.
+- **Adjust outdated listening dates** spreads eligible older unsent entries through the last 13 days, in original order. Last.fm displays the new dates. Original timestamps remain stored and are shown below the queue. Adjusted table dates have an asterisk. Saving again refreshes stale adjusted dates.
+- Accepted or uncertain outcomes never receive new automatic dates. Old-timestamp rejections may become eligible after enabling adjustment; other rejections remain held.
+- Last.fm may independently ignore plays. Its replies determine acceptance.
+- Duplicate protection uses artist, title and original timestamp, scoped to the destination account. Album changes do not create another play. It does not compare with plays submitted by other apps.
+- Clear queue removes imported metadata and date plans but retains submission receipts.
 
-## Privacy and security
+## Clock correction
 
-The Python server binds only to `127.0.0.1` on an available port. The launcher uses a random local session URL and an HttpOnly SameSite cookie. API actions require a per-run CSRF token, exact Origin and Host checks, and JSON requests. All assets are local; CSP blocks external resources and framing. The server serves explicitly allowed UI files and logos, and never accepts arbitrary filesystem paths. Uploaded metadata is rendered as text, not HTML.
+Correction is explicit, between -24 and +24 hours in 15-minute steps. For a player that logged UTC-5 local time as UTC, subtract 5 hours. Use the offset at the time you listened, including daylight saving time. Missing or invalid timestamps are excluded; the app does not invent dates for players without a working clock.
 
-API requests use `https://ws.audioscrobbler.com/2.0/`, with normal TLS certificate verification, redirects disabled and a 30-second timeout. Credentials are never returned by the state API or logged. MD5 signatures are required by Last.fm; local credential encryption uses Windows DPAPI, not MD5.
+## Interrupted submissions
 
-By default credentials stay in process memory. **Remember on this PC** encrypts the API key, shared secret and Last.fm session with Windows DPAPI for your Windows user. There is no plaintext fallback. DPAPI does not protect against malware running as your Windows user. Disconnect deletes local saved credentials; [revoke access on Last.fm](https://www.last.fm/settings/applications) to invalidate the remote session too.
+An interrupted reply may leave a play already on Last.fm. Such entries are marked **Check outcome** and held back. Highlight the play, click **Check outcome**, open your listening history, and check it. Confirm that you checked before choosing **Already received** or **Missing - allow retry**. A retry can duplicate a play already received by Last.fm.
 
-Data lives in `%LOCALAPPDATA%\RockboxRelay`: `relay.sqlite3` (unencrypted track metadata and account-specific receipt fingerprints), `credentials.dpapi` if enabled, and local instance/session files. The existing `RockboxRelay` directory name is retained so previous installations keep their queue, settings, and receipts after the rename. To delete all data, stop the app and delete that folder. This also removes duplicate protection. Local queue metadata is not sent to any server during import.
+Submission is oldest first in batches of at most 50. The interface remains available while network work runs. Queue/account changes and closing the app are held until the active operation finishes.
 
-The readable source can be reviewed; this is not a claim of an independent security audit. Python and your browser are the only runtime requirements. Non-Windows use is possible with memory-only credentials.
+## Privacy and storage
 
-## Protocol references
+The app starts no server and sends no telemetry. Network requests go directly to Last.fm over verified HTTPS. Your browser opens for authorization and external links. Confirmed submissions send song metadata, listening timestamps, duration and optional track number/MusicBrainz ID.
 
-- [Last.fm desktop authentication](https://www.last.fm/api/desktopauth)
-- [Last.fm scrobbling rules, batching, and ignored codes](https://www.last.fm/api/scrobbling)
-- [track.scrobble parameters](https://www.last.fm/api/show/track.scrobble)
-- [Rockbox's official log exporter source](https://github.com/Rockbox/rockbox/blob/master/apps/plugins/lastfm_scrobbler.c)
+Credentials stay in memory unless **Remember on this PC** is selected. Windows DPAPI encrypts the API key, shared secret and session key for your Windows user. Software running as that user may still access them. On other platforms, leave remembering off.
+
+The unencrypted SQLite queue, receipts and preferences live in `%LOCALAPPDATA%\RockboxRelay` on Windows (`~/.local/share/RockboxRelay` elsewhere). Existing version 1.0 storage is reused. Uninstall preserves it. To erase all data, close the app and remove that folder; duplicate protection will be lost. Tests and smoke checks use temporary data and fake responses.
+
+Disconnect removes saved credentials and the active session. To revoke access on Last.fm too, remove the app from [Last.fm application settings](https://www.last.fm/settings/applications).

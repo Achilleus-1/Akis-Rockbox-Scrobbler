@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.1.0 | 2026-10-10
+
+- Converted to a standalone native desktop window; removed HTML/JavaScript and the local HTTP server.
+- Added persistent dark mode across the queue, settings and reading panels.
+- Added Windows Setup and portable releases containing a private Python/Tcl/Tk runtime, with no FFmpeg dependency.
+- Added tagged release automation, checksums, installer/uninstaller smoke checks and native UI integration tests.
+- Preserved existing queue storage, credentials, receipts, date adjustment and explicit submission confirmation.
+- Replaced the WebGL decoration with a static native Aero-inspired design and updated documentation/screenshots.
+
+
 ## 1.0.0
 
 - Import and review Rockbox scrobbler logs, including entries treated as at least 50% listened.

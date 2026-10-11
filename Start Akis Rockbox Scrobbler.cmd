@@ -1,21 +1,21 @@
 @echo off
 setlocal
 cd /d "%~dp0"
-where python >nul 2>nul
-if %errorlevel% equ 0 (
-    python scrobbler.py
-) else (
-    where py >nul 2>nul
-    if errorlevel 1 (
-        echo Python 3.10 or newer is required. Install Python from https://www.python.org/downloads/
-        echo Enable "Add Python to PATH" during installation, then run this launcher again.
-    ) else (
-        py -3 scrobbler.py
-    )
+if exist "dist\Akis-Rockbox-Scrobbler\Akis-Rockbox-Scrobbler.exe" (
+    start "" "dist\Akis-Rockbox-Scrobbler\Akis-Rockbox-Scrobbler.exe"
+    exit /b
 )
-if errorlevel 1 (
-    echo.
-    echo Aki's Rockbox Scrobbler could not start. See the message above for details.
-    pause
+where pythonw >nul 2>nul
+if not errorlevel 1 (
+    start "" pythonw "%~dp0app.py"
+    exit /b
 )
-endlocal
+where pyw >nul 2>nul
+if not errorlevel 1 (
+    start "" pyw -3 "%~dp0app.py"
+    exit /b
+)
+echo Source requires Python 3.10+ with Tk support.
+echo For the standalone app, download Setup or the portable ZIP from:
+echo https://github.com/Achilleus-1/Akis-Rockbox-Scrobbler/releases/latest
+pause

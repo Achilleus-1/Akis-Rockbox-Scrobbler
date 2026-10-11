@@ -1,76 +1,98 @@
-<img src="web/logo-black.png" alt="Achilleus" width="80" align="right">
+<img src="assets/branding/achilleus-black.png" alt="Achilleus" width="80" align="right">
 
 # Aki's Rockbox Scrobbler
 
-**[Product of Achilleus](https://linktr.ee/achilleus_)** — Created and maintained by [Achilleus (Achilleus-1)](https://github.com/Achilleus-1).
+**[Product of Achilleus](https://linktr.ee/achilleus_)** | Created and maintained by [Achilleus](https://github.com/Achilleus-1).
 
-Your pocket player's listening history, on Last.fm. A lightweight local app for importing Rockbox logs, reviewing your plays, and scrobbling the ones you choose — with a Frutiger Aero music desk and interactive liquid glass.
+Your pocket player's listening history, on Last.fm. A native Windows desktop app for importing Rockbox logs, reviewing plays, and scrobbling the ones you choose. Includes light and dark themes.
 
 [![Checks](https://github.com/Achilleus-1/Akis-Rockbox-Scrobbler/actions/workflows/checks.yml/badge.svg?branch=main)](https://github.com/Achilleus-1/Akis-Rockbox-Scrobbler/actions/workflows/checks.yml)
+[![Release](https://img.shields.io/github/v/release/Achilleus-1/Akis-Rockbox-Scrobbler)](https://github.com/Achilleus-1/Akis-Rockbox-Scrobbler/releases/latest)
 [![MIT license](https://img.shields.io/badge/license-MIT-087aa9)](LICENSE)
-[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-087aa9)](https://www.python.org/downloads/)
 
-![Aki's Rockbox Scrobbler — interactive liquid glass music desk](docs/images/preview.png)
+![Native desktop interface, light theme](docs/images/preview.png)
 
-**[Download 1.0.0](https://github.com/Achilleus-1/Akis-Rockbox-Scrobbler/releases/tag/v1.0.0)** · [User guide](docs/USER_GUIDE.md) · [Troubleshooting](docs/TROUBLESHOOTING.md) · [Changelog](CHANGELOG.md)
+**[Download for Windows](https://github.com/Achilleus-1/Akis-Rockbox-Scrobbler/releases/latest)** | [User guide](docs/USER_GUIDE.md) | [Troubleshooting](docs/TROUBLESHOOTING.md) | [Changelog](CHANGELOG.md)
+
+## Install on Windows
+
+Windows 10/11 x64 is supported. Open [Releases](https://github.com/Achilleus-1/Akis-Rockbox-Scrobbler/releases/latest) and choose:
+
+| Download | Use it for |
+| --- | --- |
+| `Akis-Rockbox-Scrobbler-1.1.0-windows-x64-setup.exe` | Normal installation, Start menu shortcut, optional desktop shortcut, and Windows uninstall support. |
+| `Akis-Rockbox-Scrobbler-1.1.0-windows-x64-portable.zip` | Extract the entire ZIP and run `Akis-Rockbox-Scrobbler.exe`. Keep its supporting files together. |
+| `Akis-Rockbox-Scrobbler-1.1.0-source.zip` | Source code for developers; requires Python. |
+| `SHA256SUMS.txt` | Checksums for the release downloads. |
+
+Setup installs for your Windows user under `%LOCALAPPDATA%\Programs\Akis-Rockbox-Scrobbler`. It includes a private Python and Tcl/Tk runtime, works offline during installation, and needs no administrator account. You do not need to install Python or FFmpeg. FFmpeg is not used by a log scrobbler.
+
+The app opens in its own desktop window and closes with that window. The browser is used for Last.fm authorization and external links. Internet access and your own Last.fm API key/shared secret are required to connect and scrobble. Release executables are currently unsigned.
 
 ## What you get
 
-- Import `.scrobbler.log` directly from a connected player or from a copy on your PC.
-- Search and review the queue, choose your plays, and confirm the destination Last.fm account.
-- Persistent queue and account-specific duplicate protection, with explicit handling of interrupted submissions.
-- Original listening dates retained locally, plus optional adjustment of outdated entries into a recent submission window.
-- Live glass refraction, pointer reflections, and click ripples. Turn it off in Settings; unsupported graphics fall back automatically.
-- Local assets, readable source, and Python's standard library. No package installation, telemetry, hosted backend, or bundled account credentials.
+- Import `.scrobbler.log` from a connected player or a copy on your PC.
+- Search/filter the queue, review original and adjusted dates, and choose individual plays.
+- Confirm the destination Last.fm account before each submission.
+- Persistent queue, account-specific duplicate protection, and explicit handling of interrupted replies.
+- Remembered dark mode across the desktop interface, queue, settings and reading panels.
+- Native controls and an Aero-inspired blue music desk, with no browser runtime or local server.
+- Optional Windows-encrypted saved credentials; no telemetry or bundled account credentials.
+
+<details>
+<summary>Dark mode preview</summary>
+
+![Native desktop interface, dark theme](docs/images/preview-dark.png)
+
+</details>
 
 ## Get started
 
-**Requirements:** Python 3.10 or newer, a modern browser, a Rockbox scrobble log, and your own Last.fm API key and shared secret. Windows is the primary desktop platform. The source ZIP is not a standalone executable.
+1. In Rockbox, enable playback logging, then run **Plugins > Applications > lastfm_scrobbler** to export `.scrobbler.log`. Raw `playback.log` uses a different format.
+2. Open the desktop app and **Settings**. [Create a Last.fm API account](https://www.last.fm/api/account/create) and save its API key and shared secret.
+3. Click **Connect Last.fm**, approve access on Last.fm, return to the app, and click **Finish connecting**.
+4. Import the exported log and review the dates. Click a play's checkbox or press Space to choose it. **Select ready** selects eligible plays in the current search/filter.
+5. Click **Scrobble selected** and confirm the destination account and listening dates.
 
-1. Download the ZIP from [Releases](https://github.com/Achilleus-1/Akis-Rockbox-Scrobbler/releases/latest) and extract it.
-2. Double-click **Start Akis Rockbox Scrobbler.cmd**. Keep its terminal open while using the app.
-3. In **Settings**, follow the link to [create a Last.fm API account](https://www.last.fm/api/account/create), then enter its key and shared secret.
-4. Click **Connect Last.fm**, approve the app on Last.fm, then return and finish connecting.
-5. Import `.scrobbler.log`, review the listening dates, select plays, and confirm **Scrobble selected**.
+## Listening dates
 
-On current Rockbox builds, export the playback log using **Plugins → Applications → lastfm_scrobbler** first. Raw `playback.log` contains paths instead of the required song metadata. See the [user guide](docs/USER_GUIDE.md) for player setup and clock correction.
+All otherwise valid entries are treated as at least 50% listened, including entries marked skipped. Rockbox exports an L/S flag rather than measured listening duration; Last.fm records plays, not a percentage.
 
-For another platform, launch `python3 scrobbler.py` from the extracted directory. Remembered credentials require Windows; leave that option off elsewhere.
+A **14-day cutoff** applies by default. Older entries stay in the queue as **Too old**. In Settings, **Adjust outdated listening dates** can spread eligible older unsent entries across the last 13 days in their original order. **Last.fm will display those adjusted dates.** Original dates stay on your PC and appear below the queue when a play is highlighted. Accepted and uncertain entries are protected from automatic resubmission. [Behavior and limits](docs/USER_GUIDE.md#behavior).
 
-## Listening dates and skipped entries
+## Your data
 
-The exported log has an L/S flag, not measured listening duration. This app deliberately treats all otherwise valid entries as at least 50% listened, including entries marked skipped. Last.fm records plays, not a listening percentage, and can still reject a submission under its own rules.
+Queue metadata, submission receipts and theme settings are stored under `%LOCALAPPDATA%\RockboxRelay`, separately from the application. Existing data from version 1.0 is reused automatically. Updates and uninstall preserve it. Clear queue removes imported metadata while preserving duplicate protection.
 
-A **14-day cutoff** applies by default. Older entries stay in the local queue as **Too old**. To submit them with newer dates, enable **Adjust outdated listening dates** in Settings and save. The app spreads eligible unsent entries across the last 13 days in their original order. **Last.fm will display those adjusted dates**; original dates remain saved on your PC. Accepted or uncertain entries are protected from automatic resubmission. [Full behavior and limits →](docs/USER_GUIDE.md#behavior)
-
-## Local by design
-
-The interface runs on `127.0.0.1`. Your source log is never edited. Nothing is scrobbled until you select and confirm it; requests go directly to Last.fm over HTTPS. Credentials stay in memory by default, with optional Windows DPAPI encryption. Local queue metadata is stored in SQLite under `%LOCALAPPDATA%\RockboxRelay`.
-
-The shader renders locally, caps its frame rate and resolution, and pauses when the page is hidden. Reduced motion uses still frames; dense reading surfaces remain more opaque. Only the appearance switch is stored in browser local storage. Pointer movement is never saved or sent.
-
-See [privacy and storage details](docs/USER_GUIDE.md#privacy-and-security) and the [security policy](SECURITY.md). This project has not received an independent security audit.
+Credentials stay in memory by default. **Remember on this PC** uses Windows DPAPI encryption. Requests go directly to Last.fm over verified HTTPS; your source log is never changed. [Privacy and storage](docs/USER_GUIDE.md#privacy-and-storage) | [Security](SECURITY.md).
 
 ## Development
 
-Clone the repository and run these checks. Node.js 22 or newer is used only for development checks; it is not needed to run the app.
+End users should use the Windows downloads above. Source requires Python 3.10+ with Tk support; no third-party runtime packages are needed. On Linux, install your distribution's `python3-tk` package if Tk is missing. Other platforms can run source, but packaged releases target Windows and credential persistence requires Windows.
 
 ```powershell
 git clone https://github.com/Achilleus-1/Akis-Rockbox-Scrobbler.git
 cd Akis-Rockbox-Scrobbler
+python app.py
 python -m unittest discover -s tests -v
-node --check web/app.js
-node --check web/liquid-glass.js
-node --test tests/test_liquid_glass.cjs
-python scrobbler.py --no-browser --data-dir .test-data
+python app.py --smoke-test .test-data/native-smoke.json
 ```
 
-Tests use fake Last.fm responses and temporary storage; they do not submit real plays. CI runs on Windows and Ubuntu with Python 3.10 and 3.12. Browser rendering is checked separately from the shader lifecycle tests.
+Windows packaging:
 
-Build the source release with `python tools/package_release.py`. The explicit file list excludes personal logs, local databases, credentials, and development tools. The ZIP appears in `dist/`.
+```powershell
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements-build.txt
+.\.venv\Scripts\python.exe build.py
+.\.venv\Scripts\python.exe tools/package_release.py
+# Install Inno Setup 6 first:
+.\.venv\Scripts\python.exe tools/build_installer.py
+```
 
-[Architecture](docs/ARCHITECTURE.md) · [Contributing](CONTRIBUTING.md) · [Code of conduct](CODE_OF_CONDUCT.md)
+The repository contains source, assets, docs, tests, build scripts and installer configuration. Python installations, downloaded dependencies, EXEs, build folders, queues, credentials and logs are excluded from Git. Compiled downloads belong in **GitHub Releases**. The tag-triggered release workflow builds Setup, portable and source ZIPs, checks the bundled app, verifies installation/uninstallation, and publishes checksums. [Distribution details](docs/DISTRIBUTION.md).
+
+[Architecture](docs/ARCHITECTURE.md) | [Contributing](CONTRIBUTING.md) | [Code of conduct](CODE_OF_CONDUCT.md)
 
 ## License and identity
 
-Source code is licensed under [MIT](LICENSE). Achilleus branding and supplied logos identify this project; the code license does not grant trademark rights. Aki's Rockbox Scrobbler is independent of Rockbox and Last.fm.
+Original source is [MIT](LICENSE). Bundled dependencies keep their own licenses, included with release downloads; see [third-party notices](THIRD-PARTY-NOTICES.txt). Achilleus branding identifies this project; the code license does not grant trademark rights. Independent of Rockbox and Last.fm.

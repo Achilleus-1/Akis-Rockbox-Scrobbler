@@ -1,19 +1,15 @@
 # Contributing
 
-Aki's Rockbox Scrobbler is a Product of Achilleus. Keep changes small, readable, and dependency-free where practical.
-
-Run these checks before opening a pull request:
+Keep changes readable and avoid unnecessary runtime dependencies. The desktop interface uses Tk/ttk and the backend uses Python's standard library.
 
 ```powershell
 python -m unittest discover -s tests -v
-node --check web/app.js
-node --check web/liquid-glass.js
-node --test tests/test_liquid_glass.cjs
+python app.py --smoke-test .test-data/native-smoke.json
 python tools/package_release.py
 ```
 
-Use `python scrobbler.py --no-browser --data-dir .test-data` for an isolated local queue. Use fake credentials and synthetic listening logs in tests. Never include API keys, shared secrets, session or launch tokens, databases, or personal listening logs in a commit or issue.
+On Linux, use `xvfb-run -a` for GUI tests on a headless machine. Test account/submission behavior with fake Last.fm replies and temporary storage. Never submit real plays in automated tests or commit private logs/credentials/databases.
 
-For UI changes, check the queue, search and selection, settings, dialogs, guide, and narrow-screen layout. Keep keyboard focus visible, render imported metadata as text, and use local assets.
+Check both light/dark modes, keyboard selection, long metadata, adjusted dates and window resizing. Keep network work off the Tk thread and preserve account/date confirmation and uncertain-result safeguards. See [architecture](docs/ARCHITECTURE.md) and [distribution](docs/DISTRIBUTION.md).
 
-Preserve the original play fingerprints and uncertain-submission guard. Changes must not silently resend a play, change a submitted date, modify source logs, or weaken the localhost session checks. New Last.fm response formats need regression coverage with anonymized fixtures.
+For Windows builds, install `requirements-build.txt` in a virtual environment and run `build.py`. Installer compilation also requires Inno Setup 6. Release binaries belong in GitHub Releases, not Git.
