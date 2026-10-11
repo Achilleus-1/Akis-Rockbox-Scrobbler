@@ -284,8 +284,10 @@ class App:
     def preferences(self):
         saved = self.db.execute("SELECT value FROM preferences WHERE name='remap_outdated'").fetchone()
         theme = self.db.execute("SELECT value FROM preferences WHERE name='dark_mode'").fetchone()
+        glass = self.db.execute("SELECT value FROM preferences WHERE name='live_glass'").fetchone()
         return {"remap_outdated": bool(saved and saved[0] == "true"),
-                "dark_mode": bool(theme and theme[0] == "true")}
+                "dark_mode": bool(theme and theme[0] == "true"),
+                "live_glass": glass is None or glass[0] == "true"}
 
     def update_remaps(self, force=False):
         """Plan dates once, retaining source fingerprints and all submitted/uncertain receipts."""
@@ -387,11 +389,12 @@ class App:
                 outdated = sum(row["status"] == "expired" for row in self.state()["tracks"])
                 return {"added": added, "duplicates": len(rows) - added, "excluded": len(issues), "issues": issues[:300], "outdated": outdated}
             if route == "/api/appearance":
-                value = data.get("dark_mode")
-                if not isinstance(value, bool):
+                values = {key: data[key] for key in ("dark_mode", "live_glass") if key in data}
+                if not values or any(not isinstance(value, bool) for value in values.values()):
                     raise AppError("Choose a light or dark appearance.")
                 with self.db:
-                    self.db.execute("INSERT OR REPLACE INTO preferences VALUES('dark_mode',?)", ("true" if value else "false",))
+                    for key, value in values.items():
+                        self.db.execute("INSERT OR REPLACE INTO preferences VALUES(?,?)", (key, "true" if value else "false"))
                 return {"ok": True}
             if route == "/api/preferences":
                 self.require_idle()

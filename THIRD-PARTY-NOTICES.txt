@@ -2,16 +2,34 @@ Aki's Rockbox Scrobbler
 
 Original application source: MIT (see LICENSE).
 
-Windows releases include a private Python runtime, Tcl/Tk, and PyInstaller's
+Windows releases include a private Python runtime, Qt/PySide6, and PyInstaller's
 bootloader. Their license texts are included in the release's licenses folder.
 
 Python: Python Software Foundation License and bundled notices
 https://www.python.org/
 https://docs.python.org/3/license.html
 
-Tcl/Tk: permissive Tcl/Tk license
-https://www.tcl-lang.org/
-See licenses/TclTk-LICENSE.txt.
+Qt 6.10.2 and PySide6 Essentials/Shiboken6 6.10.2:
+Copyright The Qt Company Ltd. and contributors. The native Core/Gui/Widgets/
+OpenGL libraries and Python bindings are distributed under LGPL-3.0, as shared
+libraries. See licenses/Qt-LGPL-3.0.txt and licenses/Qt-GPL-3.0.txt (the GPL text
+incorporated by LGPL). QtBase third-party attributions and their complete license
+texts are reproduced in licenses/Qt-THIRD-PARTY.txt. Qt's OpenGL software renderer
+and Qt plugins remain in the private runtime with their original licenses.
+
+Exact-version upstream source, including modification/build instructions:
+https://github.com/qt/qtbase/tree/v6.10.2
+https://github.com/qt/qtsvg/tree/v6.10.2
+https://code.qt.io/cgit/pyside/pyside-setup.git/tree/?h=v6.10.2
+https://download.qt.io/official_releases/QtForPython/pyside6/6.10.2/
+https://doc.qt.io/qtforpython-6/building_from_source/index.html
+https://doc.qt.io/qt-6/build-sources.html
+
+Compatible modified shared libraries may replace those in _internal/PySide6
+and _internal/shiboken6. This app does not enforce library signatures. Its source
+and pinned build instructions are provided for rebuilding and relinking with a
+modified runtime. Reverse engineering for debugging modifications to these LGPL
+libraries is permitted. This notice does not change the app's MIT license.
 
 PyInstaller: GPL-2.0-or-later WITH Bootloader-exception
 The exception permits distribution of generated applications under their own
@@ -48,7 +66,7 @@ installation as runtime redistributables; they retain Microsoft's terms.
 https://visualstudio.microsoft.com/license-terms/
 
 RUNTIME-VERSIONS.json in the compiled release's licenses folder records the
-builder's Python, OpenSSL, SQLite, zlib and PyInstaller versions.
+builder's Python, OpenSSL, SQLite, zlib, PySide6 and PyInstaller versions.
 
 FFmpeg is not used or distributed by this project.
 Rockbox and Last.fm are independent projects/services, not bundled dependencies.

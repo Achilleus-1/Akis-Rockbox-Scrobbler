@@ -1,2 +1,2 @@
-# Build dependency only. Running from source uses Python's standard library.
+-r requirements.txt
 PyInstaller==6.22.3

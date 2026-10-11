@@ -8,10 +8,12 @@ sys.path.insert(0, str(ROOT))
 from version import VERSION
 
 FILES = [
-    "app.py", "desktop.py", "scrobbler.py", "version.py", "build.py", "requirements-build.txt",
-    "Start Akis Rockbox Scrobbler.cmd", "README.md", "LICENSE", "THIRD-PARTY-NOTICES.txt",
+    "app.py", "desktop.py", "glass.py", "scrobbler.py", "version.py", "build.py", "requirements.txt", "requirements-build.txt",
+    "README.md", "LICENSE", "THIRD-PARTY-NOTICES.txt",
     "CONTRIBUTING.md", "SECURITY.md", "CHANGELOG.md", "CODE_OF_CONDUCT.md",
     "assets/app.png", "assets/app.ico", "assets/branding/achilleus-black.png", "assets/branding/achilleus-white.png", "assets/branding/achilleus-white-small.png",
+    "assets/shaders/vertex.vert", "assets/shaders/environment.frag", "assets/shaders/glass.frag", "assets/shaders/copy.frag",
+    "licenses/Qt-LGPL-3.0.txt", "licenses/Qt-GPL-3.0.txt", "licenses/Qt-THIRD-PARTY.txt",
     "licenses/TclTk-LICENSE.txt", "licenses/OpenSSL-LICENSE.txt", "licenses/libffi-LICENSE.txt",
     "licenses/zlib-LICENSE.txt", "licenses/bzip2-LICENSE.txt", "licenses/xz-LICENSE.txt", "licenses/libmpdec-LICENSE.txt",
     "docs/images/preview.png", "docs/images/preview-dark.png",
@@ -20,7 +22,7 @@ FILES = [
     ".github/ISSUE_TEMPLATE/bug_report.yml", ".github/ISSUE_TEMPLATE/feature_request.yml",
     ".github/ISSUE_TEMPLATE/config.yml", ".github/PULL_REQUEST_TEMPLATE.md",
     "docs/USER_GUIDE.md", "docs/TROUBLESHOOTING.md", "docs/ARCHITECTURE.md", "docs/DISTRIBUTION.md",
-    "docs/PORTABLE.txt", "docs/releases/1.1.0.md", "docs/releases/1.1.1.md", "installer/setup.iss",
+    "docs/PORTABLE.txt", "docs/releases/1.1.0.md", "docs/releases/1.1.1.md", "docs/releases/1.2.0.md", "installer/setup.iss",
 ]
 
 

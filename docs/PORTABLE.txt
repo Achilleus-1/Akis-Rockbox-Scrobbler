@@ -5,6 +5,10 @@ Keep _internal and the other files beside the EXE. No system Python, browser
 interface, FFmpeg, or administrator account is needed.
 
 The browser opens only for Last.fm authorization and external links.
+The native Frutiger Aero interface includes dark mode and live liquid glass.
+OpenGL 2.1+ enables animation, refraction, reflections and ripples. Unsupported
+graphics retain the still Aero interface. Both appearance toggles are in the
+sidebar; About reports the renderer status.
 In Settings, enter your own Last.fm API key and shared secret. Connect Last.fm,
 approve access, return to the app, and click Finish connecting.
 

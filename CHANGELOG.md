@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.2.0 | 2026-10-10
+
+- Restored the Frutiger Aero layout, pastel flowing scenery, glossy player artwork and rounded glass surfaces in native Qt.
+- Ported the original liquid glass shader to native OpenGL with refraction, pointer reflections, click ripples and matching dark mode.
+- Added remembered live/still glass, reduced-motion support, inactive-window pause and a still graphics fallback.
+- Made the EXE the primary launch path: source builds put it directly in the project folder; removed the script launcher.
+- Bundled replaceable Qt/Python libraries with complete Qt license texts and upstream source references.
+- Restored file dropping and an unsaved, unsubmitable sample preview; preserved all backend protections and user data.
+
 ## 1.1.1 — 2026-10-10
 
 - Added notices for the libraries bundled by Python, plus runtime version metadata.

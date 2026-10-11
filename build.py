@@ -1,4 +1,4 @@
-"""Build the Windows portable app with a private Python/Tcl/Tk runtime."""
+"""Build the Windows EXE with private Python and replaceable Qt shared libraries."""
 import importlib.metadata
 import json
 from pathlib import Path
@@ -35,6 +35,7 @@ def main():
         "python": sys.version, "openssl": ssl.OPENSSL_VERSION,
         "sqlite": sqlite3.sqlite_version, "zlib": zlib.ZLIB_RUNTIME_VERSION,
         "pyinstaller": distribution.version,
+        "pyside6_essentials": importlib.metadata.version("PySide6_Essentials"),
     }, indent=2), encoding="utf-8")
     for name in ("LICENSE", "THIRD-PARTY-NOTICES.txt"):
         shutil.copyfile(ROOT / name, licenses / name)
@@ -55,6 +56,8 @@ def main():
 ''', encoding="utf-8")
     command = [sys.executable, "-m", "PyInstaller", "--noconfirm", "--clean", "--onedir", "--windowed",
                "--noupx", "--name", NAME, "--icon", str(ROOT / "assets" / "app.ico"),
+               "--exclude-module", "tkinter", "--exclude-module", "PySide6.QtQml",
+               "--exclude-module", "PySide6.QtQuick", "--exclude-module", "PySide6.QtWebEngineCore",
                "--version-file", str(version_file),
                "--specpath", str(ROOT / "build"), "--distpath", str(ROOT / "dist"),
                "--workpath", str(ROOT / "build" / "pyinstaller"),
@@ -69,12 +72,21 @@ def main():
     output = ROOT / "dist" / NAME
     shutil.copytree(licenses, output / "licenses", dirs_exist_ok=True)
     shutil.copyfile(ROOT / "docs" / "PORTABLE.txt", output / "README.txt")
+    # Source downloads build the same EXE launcher directly in the project folder.
+    runtime = ROOT / "_internal"
+    if runtime.exists():
+        if runtime.resolve() != ROOT.resolve() / "_internal" or not runtime.is_dir():
+            raise SystemExit("Refusing to replace a runtime outside this project.")
+        shutil.rmtree(runtime)
+    shutil.copytree(output / "_internal", runtime)
+    shutil.copyfile(output / (NAME + ".exe"), ROOT / (NAME + ".exe"))
     archive_path = ROOT / "dist" / f"{NAME}-{VERSION}-windows-x64-portable.zip"
     with zipfile.ZipFile(archive_path, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
         for path in sorted(output.rglob("*")):
             if path.is_file():
                 archive.write(path, Path(NAME) / path.relative_to(output))
     print(f"Built {output / (NAME + '.exe')}")
+    print(f"Local launcher: {ROOT / (NAME + '.exe')}")
     print(f"Portable release: {archive_path}")
 
 

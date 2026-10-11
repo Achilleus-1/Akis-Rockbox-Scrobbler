@@ -6,12 +6,13 @@
 | --- | --- |
 | Portable EXE cannot start | Extract the whole ZIP. Keep `_internal` and all supporting files next to the EXE. Use the x64 Windows 10/11 build. |
 | App is already running | Switch to the existing desktop window. The queue allows one instance per data directory. |
-| `tkinter` is missing when running source | Use a Python installation with Tk. Linux may need `python3-tk`. Windows release users do not need Python installed. |
+| Source cannot import `PySide6` | Install the pinned `requirements-build.txt` into your virtual environment, run `build.py`, then launch the generated EXE. Release users need no Python or Qt installation. |
+| Liquid glass is still | Enable Live liquid glass in the sidebar. Animation pauses while inactive/minimized and respects Windows reduced motion. OpenGL 2.1+ is required; update the graphics driver if unavailable. About reports the renderer status. A still Aero fallback preserves app functionality. |
 | Last.fm is disconnected | Save your own 32-character API key/shared secret, then Connect Last.fm, authorize, and Finish connecting. |
 | Finish connecting fails | Approve the Last.fm authorization first. If it expired, disconnect in Settings and reconnect. |
 | No plays imported | Export `.scrobbler.log` using Rockbox's `lastfm_scrobbler` plugin. Raw `playback.log` is a different format. Read the import report's line-specific errors. |
 | Plays are Too old | Last.fm's 14-day cutoff is enabled by default. Date adjustment is optional; Last.fm will show the adjusted dates. |
-| Scrobble selected is disabled | Connect an account and select eligible plays. Accepted, ignored, expired and uncertain plays cannot be submitted directly. |
+| Scrobble selected is disabled | Connect an account and select eligible plays. Sample previews cannot be submitted; click Try a sample again to return to your queue. Accepted, ignored, expired and uncertain plays cannot be submitted directly. |
 | Listening dates look wrong | Review the original date below the table. Only apply explicit player clock correction if needed. An asterisk marks an adjusted date. |
 | Check outcome | Check the destination account's Last.fm history. Mark received or explicitly allow retry; never retry blindly. |
 | Saved credentials cannot unlock | Reconnect in Settings under the original Windows user. DPAPI files are not portable between users. |

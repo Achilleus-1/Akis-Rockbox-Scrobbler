@@ -1,0 +1,2 @@
+# Native desktop widgets and OpenGL; releases bundle these shared libraries.
+PySide6-Essentials==6.10.2

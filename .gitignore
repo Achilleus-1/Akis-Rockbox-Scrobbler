@@ -11,6 +11,7 @@ build/
 *.exe
 .test-output/
 .venv/
+/_internal/
 .env
 .env.*
 *.log

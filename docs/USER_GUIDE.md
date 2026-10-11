@@ -6,7 +6,7 @@
 
 Download the Windows Setup EXE from [Releases](https://github.com/Achilleus-1/Akis-Rockbox-Scrobbler/releases/latest), run it, and launch the app from its Start menu shortcut. Setup needs no administrator account or downloads during installation. Uninstall through Windows Installed apps.
 
-For the portable edition, extract the whole ZIP and double-click `Akis-Rockbox-Scrobbler.exe`. Keep `_internal` and the supporting files together. Both editions include Python and Tcl/Tk. No system Python, FFmpeg, terminal, or browser interface is required.
+For the portable edition, extract the whole ZIP and double-click `Akis-Rockbox-Scrobbler.exe`. Keep `_internal` and the supporting files together. Both editions include Python and Qt. No system Python, FFmpeg, terminal, or browser interface is required. If downloading source from Git, follow the README's build steps once, then double-click the generated EXE in the project folder.
 
 ## Connect and import
 
@@ -17,7 +17,9 @@ For the portable edition, extract the whole ZIP and double-click `Akis-Rockbox-S
 5. Search/filter the queue and select plays by clicking their checkboxes or pressing Space on a highlighted row. **Select ready** selects eligible visible plays; **Deselect all** clears all selections, including hidden ones.
 6. Click **Scrobble selected**. Confirm the account, count and date range before anything is sent.
 
-Click **Dark mode** in the sidebar or Settings to change themes. The setting survives restarting the app. Close the window to quit; wait for any active operation to finish first.
+Click **Dark mode** in the sidebar to change themes. **Live liquid glass** enables animated native refraction, pointer reflections and click ripples; disable it for a still frame. Both settings survive restarting. Animation pauses when inactive/minimized and respects Windows reduced motion. Without OpenGL 2.1+, the app uses a still Aero background. About reports the graphics status.
+
+You can drop a local log onto the import card. **Try a sample** previews synthetic listens without saving or submitting anything; click it again to return to your queue. Close the window to quit; wait for any active operation to finish first.
 
 ## Behavior
 
